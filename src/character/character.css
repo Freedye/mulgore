@@ -1,4 +1,28 @@
-.characterBox    {
-    width: 500px;
+
+.characterBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.characterPhoto {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.characterRender {
     height: 500px;
+}
+
+.characterData {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
 }

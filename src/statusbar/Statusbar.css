@@ -1,9 +1,9 @@
 .appBar {
-    width: 100%;
+    width: 100vw;
+    flex-grow: unset !important;
 }
 
 .appBarLogo {
-    padding-left: 12px;
     height: 66px;
     width: 56px;
 }
