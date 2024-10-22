@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import Loader from './loader/Loader.js';
+import DenseAppBar from './statusbar/Statusbar.js';
+import CharacterPanel from './character/character.js';
+import React, { useState, useEffect } from 'react';
+
+// test loading screen
+const DelayedMessage = () => {
+  const [loader, setLoader] = useState('');
+
+  useEffect(() => {
+    // Use setTimeout to update the message after 2000 milliseconds (2 seconds)
+    setLoader(<Loader/>);
+    const timeoutId = setTimeout(() => {
+      setLoader();
+    }, 3000);
+
+    // Cleanup function to clear the timeout if the component unmounts
+    return () => clearTimeout(timeoutId);
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  return (
+    <div>
+      {loader}
+    </div>
+  );
+};
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <DenseAppBar />
+      <CharacterPanel />
     </div>
   );
 }

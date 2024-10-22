@@ -1,0 +1,9 @@
+.appBar {
+    width: 100%;
+}
+
+.appBarLogo {
+    padding-left: 12px;
+    height: 66px;
+    width: 56px;
+}
