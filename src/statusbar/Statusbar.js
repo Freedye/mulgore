@@ -19,7 +19,7 @@ const darkTheme = createTheme({
 
 export default function DenseAppBar() {
   return (
-    <Box sx={{ flexGrow: 1 }} className="appBar">
+    <Box className="appBar">
       <ThemeProvider theme={darkTheme}>
         <AppBar position="static" color="primary">
           <Toolbar variant="dense">

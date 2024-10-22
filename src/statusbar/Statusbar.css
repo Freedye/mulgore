@@ -1,6 +1,5 @@
 .appBar {
     width: 100vw;
-    flex-grow: unset !important;
 }
 
 .appBarLogo {
