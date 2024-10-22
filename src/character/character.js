@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import "./character.css";
-import character from "../img/character.png";
+import "./Character.css";
+import Character from "../img/character.png";
+import Loader from "../loader/Loader" 
 
 const darkTheme = createTheme({
   palette: {
@@ -62,7 +63,7 @@ export default function CharacterPanel() {
           <div className="characterBox">
             <div className="characterPhoto">
               <img
-                src={character}
+                src={Character}
                 className="characterRender"
                 alt="character"
               />
@@ -75,7 +76,7 @@ export default function CharacterPanel() {
             </div>
           </div>
         ) : (
-          <p>loading</p>
+          <Loader />
         )}
       </Box>
     </ThemeProvider>
