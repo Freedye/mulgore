@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "./Character.css";
 import Character from "../img/character.png";
-import Loader from "../loader/Loader" 
+import Loader from "../loader/Loader";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,33 +15,26 @@ const darkTheme = createTheme({
 });
 
 export default function CharacterPanel() {
-  const [data, setRaiderIOData] = useState(null);
-  const [blizzardData, setBlizzardData] = useState(null);
+  const [showLoader, setShowLoader] = useState(true);
+  const [name, setName] = useState(null);
+  const [itemLevel, setItemLevel] = useState(null);
+  const [raidProgress, setRaidProgress] = useState(null);
+  const [mythicPlusScore, setMythicPlusScore] = useState(null);
 
-  function getRaiderIOData() {
-    const xhr = new XMLHttpRequest();
-    xhr.open(
-      "GET",
-      "https://raider.io/api/v1/characters/profile?region=eu&realm=Silvermoon&name=Freedye&fields=gear%2Ctalents%2Cguild%2Craid_progression%2Cmythic_plus_scores_by_season%3Acurrent"
-    );
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        setRaiderIOData(JSON.parse(xhr.responseText));
-      }
+  useEffect(() => {
+    const fetchRioData = async () => {
+      const response = await fetch(
+        "https://raider.io/api/v1/characters/profile?region=eu&realm=Silvermoon&name=Freedye&fields=gear%2Ctalents%2Cguild%2Craid_progression%2Cmythic_plus_scores_by_season%3Acurrent"
+      );
+      const data = await response.json();
+      setName(data.name)
+      setItemLevel(data.gear.item_level_equipped);
+      setRaidProgress(data.raid_progression["nerubar-palace"].summary);
+      setMythicPlusScore(data.mythic_plus_scores_by_season[0].scores.all);
+      setShowLoader(false);
     };
-    xhr.send();
-  }
-
-  function getBlizzardData() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "blizzard link");
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        setBlizzardData(JSON.parse(xhr.responseText));
-      }
-    };
-    xhr.send();
-  }
+    fetchRioData();
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -57,9 +50,7 @@ export default function CharacterPanel() {
           },
         }}
       >
-        {getRaiderIOData()}
-
-        {data ? (
+        {!showLoader ? (
           <div className="characterBox">
             <div className="characterPhoto">
               <img
@@ -69,10 +60,10 @@ export default function CharacterPanel() {
               />
             </div>
             <div className="characterData">
-              <p>{data.name}</p>
-              <p>{data.gear.item_level_equipped}</p>
-              <p>{data.raid_progression["nerubar-palace"].summary}</p>
-              <p>{data.mythic_plus_scores_by_season[0].scores.all}</p>
+              <p>{name}</p>
+              <p>{itemLevel}</p>
+              <p>{raidProgress}</p>
+              <p>{mythicPlusScore}</p>
             </div>
           </div>
         ) : (
