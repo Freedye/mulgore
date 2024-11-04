@@ -15,13 +15,18 @@ const darkTheme = createTheme({
 });
 
 export default function CharacterPanel() {
+  let talentCount = 0;
+  let isLoadoutPresent = false;
   const [showLoader, setShowLoader] = useState(true);
   const [name, setName] = useState(null);
   const [itemLevel, setItemLevel] = useState(null);
   const [raidProgress, setRaidProgress] = useState(null);
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
   const [currentTalents, setCurrentTalents] = useState(null);
+  let [mostPopularTalents, setMostPopularTalents] = useState([]);
 
+
+  // need to set queryStrings by user needs
   useEffect(() => {
     const fetchRioData = async () => {
       const response = await fetch(
@@ -37,6 +42,35 @@ export default function CharacterPanel() {
     };
     fetchRioData();
   }, []);
+
+  useEffect(() => {
+    const fetchBestCharactersBySpec = async () => {
+      const response = await fetch(
+        "https://raider.io/api/mythic-plus/rankings/specs?region=world&season=season-tww-1&class=druid&spec=feral&page=0"
+      );
+      const data = await response.json();
+
+      for(let i = 0; i < data.rankings.rankedCharacters.length; i++) {
+        if(data.rankings.rankedCharacters[i].character.spec.name === "Feral" && data.rankings.rankedCharacters[i].character.talentLoadoutText != undefined) {
+          for(let k = 0; k < mostPopularTalents.length; k++) {
+            if(mostPopularTalents[k].loadout === data.rankings.rankedCharacters[i].character.talentLoadoutText) {
+              isLoadoutPresent = true;
+              break;
+            } else {
+              isLoadoutPresent = false;
+            }
+          }
+
+          if(!isLoadoutPresent) {
+            setMostPopularTalents([...mostPopularTalents, {id: talentCount, loadout: data.rankings.rankedCharacters[i].character.talentLoadoutText}]);
+            talentCount++;
+          }
+        }
+      }
+      console.log(mostPopularTalents);
+    };
+    fetchBestCharactersBySpec();
+  });
 
   return (
     <ThemeProvider theme={darkTheme}>
