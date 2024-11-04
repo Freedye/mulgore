@@ -20,6 +20,7 @@ export default function CharacterPanel() {
   const [itemLevel, setItemLevel] = useState(null);
   const [raidProgress, setRaidProgress] = useState(null);
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
+  const [currentTalents, setCurrentTalents] = useState(null);
 
   useEffect(() => {
     const fetchRioData = async () => {
@@ -31,6 +32,7 @@ export default function CharacterPanel() {
       setItemLevel(data.gear.item_level_equipped);
       setRaidProgress(data.raid_progression["nerubar-palace"].summary);
       setMythicPlusScore(data.mythic_plus_scores_by_season[0].scores.all);
+      setCurrentTalents(data.talentLoadout.loadout_text);
       setShowLoader(false);
     };
     fetchRioData();
@@ -53,6 +55,7 @@ export default function CharacterPanel() {
         {!showLoader ? (
           <div className="characterBox">
             <div className="characterPhoto">
+              <b>{name}</b>
               <img
                 src={Character}
                 className="characterRender"
@@ -60,10 +63,10 @@ export default function CharacterPanel() {
               />
             </div>
             <div className="characterData">
-              <p>{name}</p>
-              <p>{itemLevel}</p>
-              <p>{raidProgress}</p>
-              <p>{mythicPlusScore}</p>
+              <p><b>Item level:</b> {itemLevel}</p>
+              <p><b>Raid progress:</b> {raidProgress}</p>
+              <p><b>Mythic+ score:</b> {mythicPlusScore}</p>
+              <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + currentTalents}>Current talents</a></b></p>
             </div>
           </div>
         ) : (

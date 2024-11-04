@@ -9,14 +9,14 @@
 
 .characterPhoto {
     display: flex;
-    align-content: center;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 50%;
 }
 
 .characterRender {
-    height: 500px;
+    height: 450px;
 }
 
 .characterData {
