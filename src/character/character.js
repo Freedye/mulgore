@@ -22,8 +22,6 @@ export default function CharacterPanel() {
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
   const [currentTalents, setCurrentTalents] = useState(null);
   const [popularTalents, setPopularTalents] = useState([])
-  const mostPopularTalents = [];
-  let isLoadoutPresent = false;
 
   // need to set queryStrings by user needs
   useEffect(() => {
@@ -48,13 +46,14 @@ export default function CharacterPanel() {
         "https://raider.io/api/mythic-plus/rankings/specs?region=world&season=season-tww-1&class=druid&spec=feral&page=0"
       );
       const data = await response.json();
+      const mostPopularTalents = [];
 
       for(let i = 0; i < data.rankings.rankedCharacters.length; i++) {
         let specName = data.rankings.rankedCharacters[i].character.spec.name;
         let talentLoadoutText = data.rankings.rankedCharacters[i].character.talentLoadoutText;
         let talentPopularity = 1;
         let currentLoadOut = {};
-        isLoadoutPresent = false;
+        let isLoadoutPresent = false;
 
         if(specName === "Feral" && talentLoadoutText !== undefined) {
           if(mostPopularTalents.length === 0) {
@@ -80,7 +79,7 @@ export default function CharacterPanel() {
           talentPopularity = 1;
         }
       }
-      mostPopularTalents.sort((a, b) => (a.talentPopularity < b.talentPopularity) ? 1 : -1)
+      mostPopularTalents.sort((a, b) => (a.talentPopularity < b.talentPopularity) ? 1 : -1);
       setPopularTalents(mostPopularTalents);
     };
     fetchBestCharactersBySpec();
