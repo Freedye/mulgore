@@ -14,6 +14,8 @@ const darkTheme = createTheme({
   },
 });
 
+let characterSpecialization;
+
 export default function CharacterPanel() {
   const [showLoader, setShowLoader] = useState(true);
   const [name, setName] = useState(null);
@@ -21,7 +23,7 @@ export default function CharacterPanel() {
   const [raidProgress, setRaidProgress] = useState(null);
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
   const [currentTalents, setCurrentTalents] = useState(null);
-  const [popularTalents, setPopularTalents] = useState([])
+  const [popularTalents, setPopularTalents] = useState([]);
 
   // need to set queryStrings by user needs
   useEffect(() => {
@@ -30,7 +32,10 @@ export default function CharacterPanel() {
         "https://raider.io/api/v1/characters/profile?region=eu&realm=Silvermoon&name=Freedye&fields=gear%2Ctalents%2Cguild%2Craid_progression%2Cmythic_plus_scores_by_season%3Acurrent"
       );
       const data = await response.json();
-      setName(data.name)
+
+      characterSpecialization = data.active_spec_name;
+
+      setName(data.name);
       setItemLevel(data.gear.item_level_equipped);
       setRaidProgress(data.raid_progression["nerubar-palace"].summary);
       setMythicPlusScore(data.mythic_plus_scores_by_season[0].scores.all);
@@ -47,17 +52,19 @@ export default function CharacterPanel() {
       );
       const data = await response.json();
       const mostPopularTalents = [];
+      const rankedCharacters = data.rankings.rankedCharacters
 
-      for(let i = 0; i < data.rankings.rankedCharacters.length; i++) {
-        let specName = data.rankings.rankedCharacters[i].character.spec.name;
-        let talentLoadoutText = data.rankings.rankedCharacters[i].character.talentLoadoutText;
+      for(let i = 0; i < rankedCharacters.length; i++) {
+        let specializationName = rankedCharacters[i].character.spec.name;
+        let talentLoadoutText = rankedCharacters[i].character.talentLoadoutText;
         let talentPopularity = 1;
         let currentLoadOut = {};
         let isLoadoutPresent = false;
 
-        if(specName === "Feral" && talentLoadoutText !== undefined) {
+        if(specializationName === characterSpecialization && talentLoadoutText !== undefined) {
           if(mostPopularTalents.length === 0) {
             currentLoadOut = {talentPopularity: talentPopularity, loadout: talentLoadoutText};
+            mostPopularTalents.push(currentLoadOut);
           } else {
             for(let k = 0; k < mostPopularTalents.length; k++) {
               if(mostPopularTalents[k].loadout === talentLoadoutText) {
@@ -68,12 +75,8 @@ export default function CharacterPanel() {
 
             if(!isLoadoutPresent) {
               currentLoadOut = {talentPopularity: talentPopularity, loadout: talentLoadoutText};
+              mostPopularTalents.push(currentLoadOut);
             }
-          }
-
-            
-          if(!isLoadoutPresent) {
-            mostPopularTalents.push(currentLoadOut);
           }
 
           talentPopularity = 1;
