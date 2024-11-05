@@ -21,7 +21,7 @@ export default function CharacterPanel() {
   const [raidProgress, setRaidProgress] = useState(null);
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
   const [currentTalents, setCurrentTalents] = useState(null);
-  const [popularTalents, setPopularTaletns] = useState(null)
+  const [popularTalents, setPopularTalents] = useState([])
   const mostPopularTalents = [];
   let isLoadoutPresent = false;
 
@@ -83,8 +83,7 @@ export default function CharacterPanel() {
           talentPopularity = 1;
         }
       }
-      console.log(mostPopularTalents);
-      setPopularTaletns(mostPopularTalents);
+      setPopularTalents(mostPopularTalents);
     };
     fetchBestCharactersBySpec();
   }, []);
