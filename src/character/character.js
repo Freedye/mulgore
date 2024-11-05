@@ -114,9 +114,9 @@ export default function CharacterPanel() {
               <p><b>Item level:</b> {itemLevel}</p>
               <p><b>Raid progress:</b> {raidProgress}</p>
               <p><b>Mythic+ score:</b> {mythicPlusScore}</p>
-              <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + currentTalents} target="_blank">Current talents</a></b></p>
+              <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + currentTalents} target="_blank" rel="noreferrer">Current talents</a></b></p>
               {popularTalents.length > 0 ? (
-                <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + popularTalents[0].loadout} target="_blank">Most popular talents</a></b></p>
+                <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + popularTalents[0].loadout} target="_blank" rel="noreferrer">Most popular talents</a></b></p>
               ) : <p>Loading most popular talents...</p>}
             </div>
           </div>
