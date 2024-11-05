@@ -15,16 +15,15 @@ const darkTheme = createTheme({
 });
 
 export default function CharacterPanel() {
-  let talentCount = 0;
-  let isLoadoutPresent = false;
   const [showLoader, setShowLoader] = useState(true);
   const [name, setName] = useState(null);
   const [itemLevel, setItemLevel] = useState(null);
   const [raidProgress, setRaidProgress] = useState(null);
   const [mythicPlusScore, setMythicPlusScore] = useState(null);
   const [currentTalents, setCurrentTalents] = useState(null);
-  let [mostPopularTalents, setMostPopularTalents] = useState([]);
-
+  const [popularTalents, setPopularTaletns] = useState(null)
+  const mostPopularTalents = [];
+  let isLoadoutPresent = false;
 
   // need to set queryStrings by user needs
   useEffect(() => {
@@ -51,26 +50,44 @@ export default function CharacterPanel() {
       const data = await response.json();
 
       for(let i = 0; i < data.rankings.rankedCharacters.length; i++) {
-        if(data.rankings.rankedCharacters[i].character.spec.name === "Feral" && data.rankings.rankedCharacters[i].character.talentLoadoutText != undefined) {
-          for(let k = 0; k < mostPopularTalents.length; k++) {
-            if(mostPopularTalents[k].loadout === data.rankings.rankedCharacters[i].character.talentLoadoutText) {
-              isLoadoutPresent = true;
-              break;
-            } else {
+        let specName = data.rankings.rankedCharacters[i].character.spec.name;
+        let talentLoadoutText = data.rankings.rankedCharacters[i].character.talentLoadoutText;
+        let talentPopularity = 1;
+        let currentLoadOut = {};
+
+        if(specName === "Feral" && talentLoadoutText !== undefined) {
+          if(mostPopularTalents.length === 0) {
+            isLoadoutPresent = false;
+            currentLoadOut = {talentPopularity: talentPopularity, loadout: talentLoadoutText};
+          } else {
+            for(let k = 0; k < mostPopularTalents.length; k++) {
+              if(mostPopularTalents[k].loadout === talentLoadoutText) {
+                isLoadoutPresent = true;
+                mostPopularTalents[k].talentPopularity++;
+                isLoadoutPresent = false;
+              }
+            }
+
+            if(!isLoadoutPresent) {
               isLoadoutPresent = false;
+              currentLoadOut = {talentPopularity: talentPopularity, loadout: talentLoadoutText};
             }
           }
 
+            
           if(!isLoadoutPresent) {
-            setMostPopularTalents([...mostPopularTalents, {id: talentCount, loadout: data.rankings.rankedCharacters[i].character.talentLoadoutText}]);
-            talentCount++;
+            mostPopularTalents.push(currentLoadOut);
+            mostPopularTalents.sort((a, b) => (a.talentPopularity < b.talentPopularity) ? 1 : -1)
           }
+
+          talentPopularity = 1;
         }
       }
       console.log(mostPopularTalents);
+      setPopularTaletns(mostPopularTalents);
     };
     fetchBestCharactersBySpec();
-  });
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -101,6 +118,9 @@ export default function CharacterPanel() {
               <p><b>Raid progress:</b> {raidProgress}</p>
               <p><b>Mythic+ score:</b> {mythicPlusScore}</p>
               <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + currentTalents}>Current talents</a></b></p>
+              {popularTalents.length > 0 ? (
+                <p><b><a href={"https://www.wowhead.com/talent-calc/blizzard/" + popularTalents[0].loadout}>Most popular talents</a></b></p>
+              ) : <p>Loading most popular talents...</p>}
             </div>
           </div>
         ) : (
