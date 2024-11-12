@@ -29,7 +29,7 @@ export default function CharacterPanel() {
   useEffect(() => {
     const fetchRioData = async () => {
       const response = await fetch(
-        "https://raider.io/api/v1/characters/profile?region=eu&realm=Silvermoon&name=Freedye&fields=gear%2Ctalents%2Cguild%2Craid_progression%2Cmythic_plus_scores_by_season%3Acurrent"
+        "http://127.0.0.1:8080/getRaiderIOData"
       );
       const data = await response.json();
 
@@ -48,7 +48,7 @@ export default function CharacterPanel() {
   useEffect(() => {
     const fetchBestCharactersBySpec = async () => {
       const response = await fetch(
-        "https://raider.io/api/mythic-plus/rankings/specs?region=world&season=season-tww-1&class=druid&spec=feral&page=0"
+        "http://127.0.0.1:8080/getBestTalentsBasedOnSpec"
       );
       const data = await response.json();
       const mostPopularTalents = [];
