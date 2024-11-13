@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import "./Character.css";
+import "./character.css";
 import Character from "../img/character.png";
 import Loader from "../loader/Loader";
 
