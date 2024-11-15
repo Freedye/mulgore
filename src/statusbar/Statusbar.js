@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -10,6 +9,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import logo from "../img/banner.png";
 import "./Statusbar.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+import React, { useState } from "react";
 
 const darkTheme = createTheme({
   palette: {
@@ -62,7 +63,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+const SearchAppBar = ({ onKeyUp }) => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    onKeyUp(value); // Passa la stringa cercata al componente genitore
+  };
+
   return (
     <Box className="appBar">
       <ThemeProvider theme={darkTheme}>
@@ -89,6 +98,8 @@ export default function SearchAppBar() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                value={inputValue}
+                onChange={handleInputChange}
               />
             </Search>
           </Toolbar>
@@ -97,3 +108,5 @@ export default function SearchAppBar() {
     </Box>
   );
 }
+
+export default SearchAppBar;
