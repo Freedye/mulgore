@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import "./Character.css";
+import "./character.css";
 import Character from "../img/character.png";
 
 const darkTheme = createTheme({
